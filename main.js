@@ -23,6 +23,7 @@ function watchLocationForm() {
     $('.user-location').on('submit', event => {
         event.preventDefault();
         const location = $('#location').val();
+        
     })
 }
 
