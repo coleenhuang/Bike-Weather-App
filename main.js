@@ -1,14 +1,29 @@
-const openWeatherurl = 'api.openweathermap.org/data/2.5/weather?'
+const openWeatherurl = 'api.openweathermap.org/data/2.5/forecast?'
+
+function getForecast(url) {
+    fetch()
+} 
+
 
 function watchLocationForm() {
     $('.user-location').on('submit', event => {
         event.preventDefault();
-        getLocationValues();
+        formatUrl();
     })
 }
 
 function getLocationValues() {
-    const city = $('#city').val
+    const city = $('#city').val();
+    const country = $('#country').val();
+    return [city, country]
+}
+
+function formatUrl() {
+    const values = getLocationValues();
+    const cityName = values[0];
+    const countryCode = values[1];
+    const url = `${openWeatherurl}q=${cityName},${countryCode}`;
+    return url
 }
 
 function loadCountriesMenu(countryObject) {
@@ -16,7 +31,7 @@ function loadCountriesMenu(countryObject) {
     const countries = countryObject.forEach(country => {
         let el = document.createElement("option");
         el.textContent = country.name;
-        el.value = country.value;
+        el.value = country.code;
         selectEl.appendChild(el)
     });
     
