@@ -1,30 +1,30 @@
-const geoCodeurl = 'https://www.mapquestapi.com/geocoding/v1/address';
-
-function getCoordinates(url) {
-    //converts the location into coordinates
-    fetch(url)
-    .then(response => response.json())
-    .then(responseJson => getLatLng(responseJson))
-}
-
-function generateGeoquery(location) {
-    //generates the url to get coordinates
-}
-
-function getLatLng(responseJson){
-    //gets the specific latitude and longitude from the json response
-    const latlng = responseJson.locations[0].latLng;
-    const latitude = latlng.lat;
-    const longitude = latlng.lng;
-    return [latitude, longitude]
-}
+const openWeatherurl = 'api.openweathermap.org/data/2.5/weather?'
 
 function watchLocationForm() {
     $('.user-location').on('submit', event => {
         event.preventDefault();
-        const location = $('#location').val();
-        
+        getLocationValues();
     })
 }
 
-$(watchLocationForm)
+function getLocationValues() {
+    const city = $('#city').val
+}
+
+function loadCountriesMenu(countryObject) {
+    const selectEl = document.querySelector('#country');
+    const countries = countryObject.forEach(country => {
+        let el = document.createElement("option");
+        el.textContent = country.name;
+        el.value = country.value;
+        selectEl.appendChild(el)
+    });
+    
+}
+
+function startApp() {
+    loadCountriesMenu(COUNTRY);
+    watchLocationForm()
+}
+
+$(startApp)
