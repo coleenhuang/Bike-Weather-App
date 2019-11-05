@@ -1,14 +1,23 @@
-const openWeatherurl = 'api.openweathermap.org/data/2.5/forecast?'
+const openWeatherurl = 'https://api.openweathermap.org/data/2.5/forecast?'
+const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
 
 function getForecast(url) {
-    fetch()
+    fetch(url)
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error(response.statusText);
+    })
+    .then(responseJson => console.log(responseJson))
+    .catch(error => alert('Something went wrong. Please try again.'))
 } 
 
 
 function watchLocationForm() {
     $('.user-location').on('submit', event => {
         event.preventDefault();
-        formatUrl();
+        getForecast(formatUrl());
     })
 }
 
@@ -22,7 +31,7 @@ function formatUrl() {
     const values = getLocationValues();
     const cityName = values[0];
     const countryCode = values[1];
-    const url = `${openWeatherurl}q=${cityName},${countryCode}`;
+    const url = `${openWeatherurl}q=${cityName},${countryCode}&mode=json`;
     return url
 }
 

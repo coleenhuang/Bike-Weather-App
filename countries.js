@@ -630,8 +630,193 @@ const COUNTRY = [
     {
         name: 'New Caledonia',
         code:'nc'
-    }
+    },
+    {
+        name: 'New Zealand',
+        code:'nz'
+    },
+    {
+        name: 'Nicaragua',
+        code:'ni'
+    },
+    {
+        name: 'Niger',
+        code:'ne'
+    },
+    {
+        name: 'Nigeria',
+        code:'ng'
+    },
+    {
+        name: 'Niue',
+        code:'nu'
+    },
+    {
+        name: 'Norfolk Island',
+        code:'nf'
+    },
+    {
+        name: 'Northern Mariana Islands',
+        code:'mp'
+    },
+    {
+        name: 'Norway',
+        code:'no'
+    },
+    {
+        name: 'Oman',
+        code:'om'
+    },
+    {
+        name: 'Pakistan',
+        code:'pk'
+    },
+    {
+        name: 'Palau',
+        code:'pw'
+    },
+    {
+        name: 'Palestine',
+        code:'ps'
+    },
+    {
+        name: 'Panama',
+        code:'pa'
+    },
+    {
+        name: 'Papua New Guinea',
+        code:'pg'
+    },
+    {
+        name: 'Paraguay',
+        code:'py'
+    },
+    {
+        name: 'Peru',
+        code:'pe'
+    },
+    {
+        name: 'Philippines',
+        code:'ph'
+    },
+    {
+        name: 'Pitcairn',
+        code:'pn'
+    },
+    {
+        name: 'Poland',
+        code:'pl'
+    },
+    {
+        name: 'Portugal',
+        code:'pt'
+    },
+    {
+        name: 'Puerto Rico',
+        code:'pr'
+    },
+    {
+        name: 'Qatar',
+        code:'qa'
+    },
+    {
+        name: 'Réunion',
+        code:'re'
+    },
+    {
+        name: 'Romania',
+        code:'ro'
+    },
+    {
+        name: 'Russian Federation',
+        code:'ru'
+    },
+    {
+        name: 'Rwanda',
+        code:'rw'
+    },
+    {
+        name: 'Saint Barthélemy',
+        code:'bl'
+    },
+    {
+        name: 'Saint Helena, Ascension and Tristan da Cunha',
+        code:'sh'
+    },
+    {
+        name: 'Saint Kitts and Nevis',
+        code:'kn'
+    },
+    {
+        name: 'Saint Lucia',
+        code:'lc'
+    },
+    {
+        name: 'Saint Martin (French)',
+        code:'mf'
+    },
+    {
+        name: 'Saint Pierre and Miquelon',
+        code:'pm'
+    },
+    {
+        name: 'Saint Vincent and the Grenadines',
+        code:'vc'
+    },
+    {
+        name: 'Samoa',
+        code:'ws'
+    },
+    {
+        name: 'San Marino',
+        code:'sm'
+    },
+    {
+        name: 'Sao Tome and Principe',
+        code:'st'
+    },
+    {
+        name: 'Saudi Arabia',
+        code:'sa'
+    },
+    {
+        name: 'Senegal',
+        code:'sn'
+    },
+    {
+        name: 'Serbia',
+        code:'rs'
+    },
+    {
+        name: 'Seychelles',
+        code:'sc'
+    },
+    {
+        name: 'Sierra Leone',
+        code:'sl'
+    },
+    {
+        name: 'Singapore',
+        code:'sg'
+    },
+    {
+        name: 'Sint Maarten (Dutch)',
+        code:'sx'
+    },
+    {
+        name: 'Slovakia',
+        code:'sk'
+    },
+    {
+        name: 'Slovenia',
+        code:'si'
+    },
+    {
+        name: 'Solomon Islands',
+        code:'sb'
+    },
 ]
+
 
 
      
