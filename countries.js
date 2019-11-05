@@ -815,6 +815,182 @@ const COUNTRY = [
         name: 'Solomon Islands',
         code:'sb'
     },
+    {
+        name: 'Somalia',
+        code:'so'
+    },
+    {
+        name: 'South Africa',
+        code:'za'
+    },
+    {
+        name: 'South Georgia and the South Sandwich Islands',
+        code:'gs'
+    },
+    {
+        name: 'South Sudan',
+        code:'ss'
+    },
+    {
+        name: 'Spain',
+        code:'es'
+    },
+    {
+        name: 'Sri Lanka',
+        code:'lk'
+    },
+    {
+        name: 'Sudan',
+        code:'sd'
+    },
+    {
+        name: 'Suriname',
+        code:'sr'
+    },
+    {
+        name: 'Svalbard and Jan Mayen',
+        code:'sj'
+    },
+    {
+        name: 'Swaziland',
+        code:'sz'
+    },
+    {
+        name: 'Sweden',
+        code:'se'
+    },
+    {
+        name: 'Switzerland',
+        code:'ch'
+    },
+    {
+        name: 'Syria',
+        code:'sy'
+    },
+    {
+        name: 'Taiwan',
+        code:'tw'
+    },
+    {
+        name: 'Tajikstan',
+        code:'tj'
+    },
+    {
+        name: 'Tanzania',
+        code:'tz'
+    },
+    {
+        name: 'Thailand',
+        code:'th'
+    },
+    {
+        name: 'Timor-Leste',
+        code:'tl'
+    },
+    {
+        name: 'Togo',
+        code:'tg'
+    },
+    {
+        name: 'Tokelau',
+        code:'tk'
+    },
+    {
+        name: 'Tonga',
+        code:'to'
+    },
+    {
+        name: 'Trinidad and Tobago',
+        code:'tt'
+    },
+    {
+        name: 'Tunisia',
+        code:'tn'
+    },
+    {
+        name: 'Turkey',
+        code:'tr'
+    },
+    {
+        name: 'Turkmenistan',
+        code:'tm'
+    },
+    {
+        name: 'Turks and Caicos Islands',
+        code:'tc'
+    },
+    {
+        name: 'Tuvalu',
+        code:'tv'
+    },
+    {
+        name: 'Uganda',
+        code:'ug'
+    },
+    {
+        name: 'Ukraine',
+        code:'ua'
+    },
+    {
+        name: 'United Arab Emirates',
+        code:'ae'
+    },
+    {
+        name: 'United Kingdom',
+        code:'gb'
+    },
+    {
+        name: 'United States',
+        code:'us'
+    },
+    {
+        name: 'United States Minor Outlying Islands',
+        code:'um'
+    },
+    {
+        name: 'Urugway',
+        code:'uz'
+    },
+    {
+        name: 'Vanautu',
+        code:'vu'
+    },
+    {
+        name: 'Venezuela',
+        code:'ve'
+    },
+    {
+        name: 'Vietnam',
+        code:'vn'
+    },
+    {
+        name: 'Virgin Islands, British',
+        code:'vg'
+    },
+    {
+        name: 'Virgin Islands, U.S.',
+        code:'vi'
+    },
+    {
+        name: 'Wallis and Futuna',
+        code:'wf'
+    },
+    {
+        name: 'Western Sahara',
+        code:'eh'
+    },
+    {
+        name: 'Yemen',
+        code:'ye'
+    },
+    {
+        name: 'Zambia',
+        code:'zm'
+    },
+    {
+        name: 'Zimbabwe',
+        code:'zw'
+    },
 ]
 
 
