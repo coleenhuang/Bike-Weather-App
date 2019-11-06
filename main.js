@@ -19,7 +19,8 @@ function watchLocationForm() {
     //Adds event listener to form
     $('.user-location').on('submit', event => {
         event.preventDefault();
-        getForecast(formatUrl());
+        //getForecast(formatUrl());
+        loadDateForm();
     })
 }
 
@@ -35,8 +36,55 @@ function formatUrl() {
     const values = getLocationValues();
     const cityName = values[0];
     const countryCode = values[1];
-    const url = `${openWeatherurl}q=${cityName},${countryCode}&mode=json`;
+    const url = `${openWeatherurl}id=524901&APPID=${apiKey}&q=${cityName},${countryCode}&mode=json`;
     return url
+}
+
+function loadDateForm(){
+    //loads time selection page
+    const sectionEl = $('.user-response')
+    sectionEl.hide().empty();
+    const question = `<h2>When are you planning to use your bike?</h2>`
+    const answer = `
+    <form class='datetime'>
+        <select id="day">
+            <option value="now">Right now</option>
+            <option value="later">Later today</option>
+            <option value="tomorrow">Tomorrow</option>
+            <option value="dayafter">The day after tomorrow</option>
+        </select>
+        <select id="time"></select>
+        <button>Submit</button>
+    <form>
+    `
+    sectionEl.append(question).append(answer).show();
+    $('#time').hide();
+    showTimeMenu();
+}
+
+function showTimeMenu(){
+    //Shows time dropdown if option different from right now is selected
+    //in day dropdown menu
+    let dayMenu = document.querySelector('#day');
+    let timeMenu = $('#time');
+    dayMenu.addEventListener('change', e => {
+        let index = dayMenu.selectedIndex
+        let val = dayMenu.options[index].value;
+        if (val !== 'now') {
+            timeMenu.show();
+        }
+        else {
+            timeMenu.hide();
+        }
+    })
+}
+
+function loadTimeOptions() {
+    //loads options in time dropdown menu
+    let dayMenu = document.querySelector('#day');
+    let value = dayMenu.options[dayMenu.selectedIndex].value;
+    
+
 }
 
 function loadCountriesMenu(countryObject) {
@@ -48,7 +96,6 @@ function loadCountriesMenu(countryObject) {
         el.value = country.code;
         selectEl.appendChild(el)
     });
-    
 }
 
 function startApp() {
