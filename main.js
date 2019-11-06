@@ -1,7 +1,20 @@
-const openWeatherurl = 'https://api.openweathermap.org/data/2.5/forecast?'
+const openWeatherurl = 'https://api.openweathermap.org/data/2.5/weather?';
 const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
+const meturl ='https://api.met.no/weatherapi/sunrise/2.0/?';
 
-function getForecast(url) {
+
+
+
+function watchLocationForm() {
+    //Adds event listener to form
+    $('.user-location').on('submit', event => {
+        event.preventDefault();
+        //getWeather(formatUrl());
+        loadDateForm();
+    })
+}
+
+function getWeather(url) {
     //makes call to weather api
     fetch(url)
     .then(response => {
@@ -13,16 +26,6 @@ function getForecast(url) {
     .then(responseJson => console.log(responseJson))
     .catch(error => alert('Something went wrong. Please try again.'))
 } 
-
-
-function watchLocationForm() {
-    //Adds event listener to form
-    $('.user-location').on('submit', event => {
-        event.preventDefault();
-        //getForecast(formatUrl());
-        loadDateForm();
-    })
-}
 
 function getLocationValues() {
     //Gets values from location form
@@ -49,9 +52,9 @@ function loadDateForm(){
     <form class='datetime'>
         <select id="day">
             <option value="now">Right now</option>
-            <option value="later">Later today</option>
-            <option value="tomorrow">Tomorrow</option>
-            <option value="dayafter">The day after tomorrow</option>
+            <option value=0>Later today</option>
+            <option value=1>Tomorrow</option>
+            <option value=2>The day after tomorrow</option>
         </select>
         <select id="time"></select>
         <button>Submit</button>
@@ -85,7 +88,7 @@ function loadTimeOptions() {
     let dayMenu = document.querySelector('#day');
     let value = dayMenu.options[dayMenu.selectedIndex].value;
     let timeMenu = document.querySelector('#time');
-    if (value !== 'later') {
+    if (value > 0) {
         timeMenu.innerHTML= '';
         for (let i=0; i<=24; i++){
             let el = document.createElement("option");
@@ -106,6 +109,19 @@ function loadTimeOptions() {
         }
     }
 }
+
+function watchDateForm() {
+    //
+}
+
+function getCoordinates() {
+    //Gets the coordinates
+}
+
+function getSunrise(lat, long) {
+    //Gets the sunrise time
+}
+
 
 function loadCountriesMenu(countryObject) {
     //loads dropdown menu for countries
