@@ -49,7 +49,7 @@ function loadDateForm(){
     sectionEl.hide().empty();
     const question = `<h2>When are you planning to use your bike?</h2>`
     const answer = `
-    <form class='datetime'>
+    <form id='datetime'>
         <select id="day">
             <option value="now">Right now</option>
             <option value=0>Later today</option>
@@ -63,6 +63,7 @@ function loadDateForm(){
     sectionEl.append(question).append(answer).show();
     $('#time').hide();
     showTimeMenu();
+    watchDateForm();
 }
 
 function showTimeMenu(){
@@ -111,7 +112,12 @@ function loadTimeOptions() {
 }
 
 function watchDateForm() {
-    //
+    //Adds event listener to date and time form
+    $('#datetime').on('submit', event => {
+        event.preventDefault();
+        $('.user-response').hide();
+        $('.results').show();
+    })
 }
 
 function getCoordinates() {
