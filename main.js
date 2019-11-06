@@ -71,7 +71,8 @@ function showTimeMenu(){
         let index = dayMenu.selectedIndex
         let val = dayMenu.options[index].value;
         if (val !== 'now') {
-            timeMenu.show();
+            loadTimeOptions();
+            timeMenu.show();    
         }
         else {
             timeMenu.hide();
@@ -83,8 +84,27 @@ function loadTimeOptions() {
     //loads options in time dropdown menu
     let dayMenu = document.querySelector('#day');
     let value = dayMenu.options[dayMenu.selectedIndex].value;
-    
-
+    let timeMenu = document.querySelector('#time');
+    if (value !== 'later') {
+        timeMenu.innerHTML= '';
+        for (let i=0; i<=24; i++){
+            let el = document.createElement("option");
+            el.textContent = `${i}:00`;
+            el.value = i;
+            timeMenu.appendChild(el)
+        }
+    }
+    else {
+        timeMenu.innerHTML= '';
+        const today = new Date();
+        const hour = today.getHours();
+        for (let j=hour; j<=24; j++){
+            let el = document.createElement("option");
+            el.textContent = `${j}:00`;
+            el.value = j;
+            timeMenu.appendChild(el)
+        }
+    }
 }
 
 function loadCountriesMenu(countryObject) {
