@@ -1,7 +1,6 @@
 const openWeatherurl = 'https://api.openweathermap.org/data/2.5/weather?';
 const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
-const meturl ='https://api.met.no/weatherapi/sunrise/2.0/?';
-
+const sunriseurl ='https://api.met.no/weatherapi/sunrise/2.0/?';
 
 
 
@@ -34,8 +33,8 @@ function getLocationValues() {
     return [city, country]
 }
 
-function formatUrl() {
-    //formats url for api call
+function formatweatherUrl() {
+    //formats url for weather api call
     const values = getLocationValues();
     const cityName = values[0];
     const countryCode = values[1];
@@ -116,17 +115,68 @@ function watchDateForm() {
     $('#datetime').on('submit', event => {
         event.preventDefault();
         $('.user-response').hide();
-        $('.results').show();
+        loadResults();
     })
 }
 
-function getCoordinates() {
-    //Gets the coordinates
+
+function loadResults() {
+    //Loads the results to the page
+    //FIX ME: move the sunrise function later
+    formatSunriseurl()
+    $('.results').show();
 }
 
-function getSunrise(lat, long) {
-    //Gets the sunrise time
+function getCoordinates(responseJson) {
+    //Gets the coordinates
+    let coordinates = responseJson.coord;
+    console.log([coordinates.lat, coordinates.lon]);
+    return [coordinates.lat, coordinates.lon]
 }
+
+function getSunrise() {
+    //Makes call to sunrise api
+
+}
+
+function formatSunriseurl() {
+    //Formats url for sunrise api call
+    const coordinates = getCoordinates(TEST);
+    const lat = `lat=${coordinates[0]}`;
+    const lon = `lon=${coordinates[1]}`;
+    const date = `date=${formatDateTime}`
+    const offset = `offset=${getTimeZoneOffset()}`;
+    const url = `${sunriseurl}${lat}&${lon}&${date}&${offset}`
+    console.log('url')
+    return url
+}
+
+function formatDateTime() {
+    //Gets time and date
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth()+1; 
+    let day = today.getDate();
+    month = month < 10 ? '0' + month : month;
+    day = day < 10 ? '0' + day : day;
+    return `${year}-${month}-${day}`
+}
+
+function getTimeZoneOffset() {
+    //gets time zone offset
+    const d = new Date();
+    const offsetMin = d.getTimezoneOffset();
+    return convertMinsToHrsMins(offsetMin);
+}
+
+function convertMinsToHrsMins(mins) {
+    //Converts mins to HH:MM format 
+    let h = Math.floor(mins / 60);
+    let m = mins % 60;
+    h = h < 10 ? '0' + h : h;
+    m = m < 10 ? '0' + m : m;
+    return `${h}:${m}`;
+  }
 
 
 function loadCountriesMenu(countryObject) {

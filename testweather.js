@@ -1,43 +1,42 @@
 const TEST = {
     "coord": {
-        "lon": -0.13,
-        "lat": 51.51
+        "lon": -121.74,
+        "lat": 38.55
     },
     "weather": [
         {
-            "id": 801,
-            "main": "Clouds",
-            "description": "few clouds",
-            "icon": "02n"
+            "id": 800,
+            "main": "Clear",
+            "description": "clear sky",
+            "icon": "01d"
         }
     ],
     "base": "stations",
     "main": {
-        "temp": 278.18,
-        "pressure": 1006,
-        "humidity": 81,
-        "temp_min": 275.93,
-        "temp_max": 280.37
+        "temp": 292.23,
+        "pressure": 1018,
+        "humidity": 45,
+        "temp_min": 287.15,
+        "temp_max": 297.04
     },
-    "visibility": 10000,
+    "visibility": 16093,
     "wind": {
-        "speed": 2.6,
-        "deg": 300
+        "speed": 2.1,
+        "deg": 360
     },
-    "rain": {},
     "clouds": {
-        "all": 14
+        "all": 1
     },
-    "dt": 1573009962,
+    "dt": 1573065501,
     "sys": {
         "type": 1,
-        "id": 1414,
-        "country": "GB",
-        "sunrise": 1573023728,
-        "sunset": 1573057567
+        "id": 3933,
+        "country": "US",
+        "sunrise": 1573051132,
+        "sunset": 1573088538
     },
-    "timezone": 0,
-    "id": 2643743,
-    "name": "London",
+    "timezone": -28800,
+    "id": 5341704,
+    "name": "Davis",
     "cod": 200
 }
