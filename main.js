@@ -1,7 +1,9 @@
 const openWeatherurl = 'https://api.openweathermap.org/data/2.5/weather?';
+const futureWeatherurl = 'https://api.openweathermap.org/data/2.5/forecast?'
 const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
 const sunriseurl ='https://api.met.no/weatherapi/sunrise/2.0/?';
-
+const locationforecasturl = 'https://api.met.no/weatherapi/locationforecast/1.9/?'
+const coordinates= {};
 
 
 function watchLocationForm() {
@@ -22,7 +24,7 @@ function checkWeather(url) {
         }
         throw new Error(response.statusText);
     })
-    .then(responseJson => console.log(responseJson))
+    .then(getCoordinates)
     .catch(error => alert('Data for that location is not available, please try again.'))
 } 
 
@@ -136,10 +138,10 @@ function whichWeather() {
     }
     else {
         if (day === 0) {
-            //call meteorogisk institutt forecast api
+            //callLocationForecast()
         }
         else {
-            //call openweather forecast api
+            //callFutureWeather(formatfutureweatherUrl());
         }
     }
 }
@@ -153,7 +155,7 @@ function callCurrentWeather(url) {
         throw new Error(response.statusText);
     })
     .then(responseJson => {getCurrentConditions(responseJson)
-        callSunrise(formatSunriseurl(getCoordinates(responseJson)))})
+        callSunrise(formatSunriseurl())})
     .catch(error => alert('Data for this time is not available. Please try again.'))
 }
 
@@ -163,8 +165,41 @@ function getCurrentConditions(responseJson) {
    const celsius = KelvintoCelsius(Kelvin);
     const weatherText = `
     <p>The current weather outside is ${weatherConditions}.
-    And the temperature is ${celsius}C</p>`;
+    And the temperature is ${parseInt(celsius)}C</p>`;
     $('.results').append(weatherText);
+}
+
+function callLocationForecast(url) {
+    //Makes call to location forecast api
+    fetch(url)
+    .then(response => {
+        if (response.ok) {
+            return response.xml();
+        }
+        throw new Error(response.statusText);
+    })
+    .then(responseXML => console.log(responseXML))
+    .catch(error => alert('Something went wrong. Please try again.'))
+}
+
+function formatlocationforecastturl(coordinates) {
+    const { lat, lon } = coordinates;
+    const latitude = `lat=${lat}`;
+    const longitude = `lon=${lon}`;
+    const url = `${locationforecasturl}${latitude}&${longitude}`
+}
+
+function callFutureWeather(url) {
+
+}
+
+function formatfutureweatherUrl() {
+    //formats url for weather api call
+    const values = getLocationValues();
+    const cityName = values[0];
+    const countryCode = values[1];
+    const url = `${futureWeatherurl}id=524901&APPID=${apiKey}&q=${cityName},${countryCode}&mode=json`;
+    return url
 }
 
 function KelvintoCelsius(K) {
@@ -183,22 +218,23 @@ function callSunrise(url) {
     fetch(url)
     .then(response => {
         if (response.ok) {
-            return response.xml();
+            return response.text();
         }
         throw new Error(response.statusText);
     })
-    .then(responseXML => console.log(responseXML))
+    .then(str => (new window.DOMParser())
+    .parseFromString(str, "text/xml"))
+    .then(xml => console.log(xml))
     .catch(error => alert('Something went wrong. Please try again.'))
 }
 
 
-function formatSunriseurl(coordinates) {
+function formatSunriseurl() {
     //Formats url for sunrise api call
-    const lat = coordinates[0];
-    const lon = coordinates[1];
+    const { lat, lon } = coordinates;
     const latitude = `lat=${lat}`;
     const longitude = `lon=${lon}`;
-    const date = `date=${formatDateTime()}`
+    const date = `date=${formatDate()}`
     const offset = `offset=+${getTimeZoneOffset()}`;
     const url = `${sunriseurl}${latitude}&${longitude}&${date}&${offset}`
     console.log(url)
@@ -207,11 +243,9 @@ function formatSunriseurl(coordinates) {
 
 function getCoordinates(responseJson) {
     //Gets the coordinates
-    let coordinates = responseJson.coord;
-    console.log([coordinates.lat, coordinates.lon]);
-    return [coordinates.lat, coordinates.lon]
+    coordinates.lon = responseJson.coord.lon;
+    coordinates.lat = responseJson.coord.lat;
 }
-
 
 
 function formatDate() {
