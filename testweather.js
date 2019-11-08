@@ -1,4 +1,4 @@
-const TEST = {
+const NOW = {
     "coord": {
         "lon": -121.74,
         "lat": 38.55

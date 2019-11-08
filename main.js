@@ -8,12 +8,12 @@ function watchLocationForm() {
     //Adds event listener to form
     $('.user-location').on('submit', event => {
         event.preventDefault();
-        //getWeather(formatUrl());
+        checkWeather(formatweatherUrl());
         loadDateForm();
     })
 }
 
-function getWeather(url) {
+function checkWeather(url) {
     //makes call to weather api
     fetch(url)
     .then(response => {
@@ -23,7 +23,7 @@ function getWeather(url) {
         throw new Error(response.statusText);
     })
     .then(responseJson => console.log(responseJson))
-    .catch(error => alert('Something went wrong. Please try again.'))
+    .catch(error => alert('Data for that location is not available, please try again.'))
 } 
 
 function getLocationValues() {
@@ -44,8 +44,8 @@ function formatweatherUrl() {
 
 function loadDateForm(){
     //loads time selection page
-    const sectionEl = $('.user-response')
-    sectionEl.hide().empty();
+    const locationSection = $('.location-response')
+    const dateSection = $('.date-response')
     const question = `<h2>When are you planning to use your bike?</h2>`
     const answer = `
     <form id='datetime'>
@@ -59,7 +59,8 @@ function loadDateForm(){
         <button>Submit</button>
     <form>
     `
-    sectionEl.append(question).append(answer).show();
+    locationSection.hide();
+    dateSection.empty().append(question).append(answer).show();
     $('#time').hide();
     showTimeMenu();
     watchDateForm();
@@ -114,7 +115,7 @@ function watchDateForm() {
     //Adds event listener to date and time form
     $('#datetime').on('submit', event => {
         event.preventDefault();
-        $('.user-response').hide();
+        $('.date-response').hide();
         loadResults();
     })
 }
@@ -122,9 +123,86 @@ function watchDateForm() {
 
 function loadResults() {
     //Loads the results to the page
-    //FIX ME: move the sunrise function later
-    formatSunriseurl()
+    whichWeather();
     $('.results').show();
+}
+
+function whichWeather() {
+    //Decides which api to call based on date selected
+    
+    const day = $('#day').val();
+    if (day === 'now') {
+        callCurrentWeather(formatweatherUrl());
+    }
+    else {
+        if (day === 0) {
+            //call meteorogisk institutt forecast api
+        }
+        else {
+            //call openweather forecast api
+        }
+    }
+}
+
+function callCurrentWeather(url) {
+    fetch(url)
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error(response.statusText);
+    })
+    .then(responseJson => {getCurrentConditions(responseJson)
+        callSunrise(formatSunriseurl(getCoordinates(responseJson)))})
+    .catch(error => alert('Data for this time is not available. Please try again.'))
+}
+
+function getCurrentConditions(responseJson) {
+   const weatherConditions = responseJson.weather[0].description;
+    const Kelvin = responseJson.main.temp;
+   const celsius = KelvintoCelsius(Kelvin);
+    const weatherText = `
+    <p>The current weather outside is ${weatherConditions}.
+    And the temperature is ${celsius}C</p>`;
+    $('.results').append(weatherText);
+}
+
+function KelvintoCelsius(K) {
+    //Converts Kelvin to celsius
+    return K - 273.15;
+}
+
+
+
+function getTime() {
+    //gets the time 
+}
+
+function callSunrise(url) {
+    //Makes call to sunrise api
+    fetch(url)
+    .then(response => {
+        if (response.ok) {
+            return response.xml();
+        }
+        throw new Error(response.statusText);
+    })
+    .then(responseXML => console.log(responseXML))
+    .catch(error => alert('Something went wrong. Please try again.'))
+}
+
+
+function formatSunriseurl(coordinates) {
+    //Formats url for sunrise api call
+    const lat = coordinates[0];
+    const lon = coordinates[1];
+    const latitude = `lat=${lat}`;
+    const longitude = `lon=${lon}`;
+    const date = `date=${formatDateTime()}`
+    const offset = `offset=+${getTimeZoneOffset()}`;
+    const url = `${sunriseurl}${latitude}&${longitude}&${date}&${offset}`
+    console.log(url)
+    return url
 }
 
 function getCoordinates(responseJson) {
@@ -134,24 +212,9 @@ function getCoordinates(responseJson) {
     return [coordinates.lat, coordinates.lon]
 }
 
-function getSunrise() {
-    //Makes call to sunrise api
 
-}
 
-function formatSunriseurl() {
-    //Formats url for sunrise api call
-    const coordinates = getCoordinates(TEST);
-    const lat = `lat=${coordinates[0]}`;
-    const lon = `lon=${coordinates[1]}`;
-    const date = `date=${formatDateTime}`
-    const offset = `offset=${getTimeZoneOffset()}`;
-    const url = `${sunriseurl}${lat}&${lon}&${date}&${offset}`
-    console.log('url')
-    return url
-}
-
-function formatDateTime() {
+function formatDate() {
     //Gets time and date
     const today = new Date();
     const year = today.getFullYear();
@@ -175,7 +238,7 @@ function convertMinsToHrsMins(mins) {
     let m = mins % 60;
     h = h < 10 ? '0' + h : h;
     m = m < 10 ? '0' + m : m;
-    return `${h}:${m}`;
+    return `${h}\:${m}`;
   }
 
 
