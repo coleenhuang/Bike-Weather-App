@@ -24,7 +24,8 @@ function checkWeather(url) {
         }
         throw new Error(response.statusText);
     })
-    .then(getCoordinates)
+    .then(responseJson => {getCurrentConditions(responseJson)
+    getCoordinates(responseJson)})
     .catch(error => alert('Data for that location is not available, please try again.'))
 } 
 
@@ -58,7 +59,7 @@ function loadDateForm(){
             <option value=2>The day after tomorrow</option>
         </select>
         <select id="time"></select>
-        <button>Submit</button>
+        <button type='submit'>Submit</button>
     <form>
     `
     locationSection.hide();
@@ -134,7 +135,7 @@ function whichWeather() {
     
     const day = $('#day').val();
     if (day === 'now') {
-        callCurrentWeather(formatweatherUrl());
+        callSunrise(formatSunriseurl());
     }
     else {
         if (day === 0) {
@@ -146,18 +147,6 @@ function whichWeather() {
     }
 }
 
-function callCurrentWeather(url) {
-    fetch(url)
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error(response.statusText);
-    })
-    .then(responseJson => {getCurrentConditions(responseJson)
-        callSunrise(formatSunriseurl())})
-    .catch(error => alert('Data for this time is not available. Please try again.'))
-}
 
 function getCurrentConditions(responseJson) {
    const weatherConditions = responseJson.weather[0].description;
@@ -247,13 +236,21 @@ function getCoordinates(responseJson) {
     coordinates.lat = responseJson.coord.lat;
 }
 
+function getDays() {
+    let date = $('#day').val();
+    if (date === 'now') {
+        date = 0;
+    }
+    console.log(date);
+    return date
+}
 
-function formatDate() {
+function formatDate(date) {
     //Gets time and date
     const today = new Date();
     const year = today.getFullYear();
-    let month = today.getMonth()+1; 
-    let day = today.getDate();
+    let month = today.getMonth()+1;
+    let day = today.getDate()+ parseInt(date);
     month = month < 10 ? '0' + month : month;
     day = day < 10 ? '0' + day : day;
     return `${year}-${month}-${day}`
