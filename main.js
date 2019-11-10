@@ -4,45 +4,15 @@ const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
 const sunriseurl ='https://api.met.no/weatherapi/sunrise/2.0/?';
 const locationforecasturl = 'https://api.met.no/weatherapi/locationforecast/1.9/?'
 const coordinates= {};
+let chosenTime;
 
 
 function watchLocationForm() {
     //Adds event listener to form
     $('.user-location').on('submit', event => {
         event.preventDefault();
-        checkWeather(formatweatherUrl());
-        loadDateForm();
+        callCurrentWeather(formatweatherUrl());
     })
-}
-
-function checkWeather(url) {
-    //makes call to weather api
-    fetch(url)
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error(response.statusText);
-    })
-    .then(responseJson => {getCurrentConditions(responseJson)
-    getCoordinates(responseJson)})
-    .catch(error => alert('Data for that location is not available, please try again.'))
-} 
-
-function getLocationValues() {
-    //Gets values from location form
-    const city = $('#city').val();
-    const country = $('#country').val();
-    return [city, country]
-}
-
-function formatweatherUrl() {
-    //formats url for weather api call
-    const values = getLocationValues();
-    const cityName = values[0];
-    const countryCode = values[1];
-    const url = `${openWeatherurl}id=524901&APPID=${apiKey}&q=${cityName},${countryCode}&mode=json`;
-    return url
 }
 
 function loadDateForm(){
@@ -123,7 +93,6 @@ function watchDateForm() {
     })
 }
 
-
 function loadResults() {
     //Loads the results to the page
     whichWeather();
@@ -147,15 +116,56 @@ function whichWeather() {
     }
 }
 
+function callCurrentWeather(url) {
+    //makes call to weather api
+    fetch(url)
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error(response.statusText);
+    })
+    .then(responseJson => {getCurrentConditions(responseJson)
+    getCoordinates(responseJson)
+    loadDateForm()})
+    .catch(error => alert('Data for that location is not available, please try again.'))
+}
 
-function getCurrentConditions(responseJson) {
-   const weatherConditions = responseJson.weather[0].description;
-    const Kelvin = responseJson.main.temp;
-   const celsius = KelvintoCelsius(Kelvin);
-    const weatherText = `
-    <p>The current weather outside is ${weatherConditions}.
-    And the temperature is ${parseInt(celsius)}C</p>`;
-    $('.results').append(weatherText);
+function formatweatherUrl() {
+    //formats url for weather api call
+    const values = getLocationValues();
+    const cityName = values[0];
+    const countryCode = values[1];
+    const url = `${openWeatherurl}id=524901&APPID=${apiKey}&q=${cityName},${countryCode}&mode=json`;
+    return url
+}
+
+function callSunrise(url) {
+    //Makes call to sunrise api
+    fetch(url)
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        }
+        throw new Error(response.statusText);
+    })
+    .then(str => (new window.DOMParser())
+        .parseFromString(str, "text/xml"))
+    .then(xml => getSunriseTime(xml))
+    .catch(error => alert('Something went wrong. Please try again.'))
+}
+
+
+function formatSunriseurl() {
+    //Formats url for sunrise api call
+    const { lat, lon } = coordinates;
+    const latitude = `lat=${lat}`;
+    const longitude = `lon=${lon}`;
+    const date = `date=${formatDate(getDays())}`
+    const offset = `offset=+${getTimeZoneOffset()}`;
+    const url = `${sunriseurl}${latitude}&${longitude}&${date}&${offset}`
+    console.log(url)
+    return url
 }
 
 function callLocationForecast(url) {
@@ -191,43 +201,11 @@ function formatfutureweatherUrl() {
     return url
 }
 
-function KelvintoCelsius(K) {
-    //Converts Kelvin to celsius
-    return K - 273.15;
-}
-
-
-
-function getTime() {
-    //gets the time 
-}
-
-function callSunrise(url) {
-    //Makes call to sunrise api
-    fetch(url)
-    .then(response => {
-        if (response.ok) {
-            return response.text();
-        }
-        throw new Error(response.statusText);
-    })
-    .then(str => (new window.DOMParser())
-    .parseFromString(str, "text/xml"))
-    .then(xml => console.log(xml))
-    .catch(error => alert('Something went wrong. Please try again.'))
-}
-
-
-function formatSunriseurl() {
-    //Formats url for sunrise api call
-    const { lat, lon } = coordinates;
-    const latitude = `lat=${lat}`;
-    const longitude = `lon=${lon}`;
-    const date = `date=${formatDate()}`
-    const offset = `offset=+${getTimeZoneOffset()}`;
-    const url = `${sunriseurl}${latitude}&${longitude}&${date}&${offset}`
-    console.log(url)
-    return url
+function getLocationValues() {
+    //Gets values from location form
+    const city = $('#city').val();
+    const country = $('#country').val();
+    return [city, country]
 }
 
 function getCoordinates(responseJson) {
@@ -236,12 +214,40 @@ function getCoordinates(responseJson) {
     coordinates.lat = responseJson.coord.lat;
 }
 
+function getCurrentConditions(responseJson) {
+   const weatherConditions = responseJson.weather[0].description;
+    const Kelvin = responseJson.main.temp;
+   const celsius = KelvintoCelsius(Kelvin);
+    const weatherText = `
+    <p>The current weather outside is ${weatherConditions}.
+    And the temperature is ${parseInt(celsius)}°C</p>`;
+    $('.results').append(weatherText);
+}
+
+function getSunriseTime(xml) {
+    const sunrise = xml.querySelector('sunrise').getAttribute('time');
+    const sunset = xml.querySelector('sunset').getAttribute('time');
+    return [sunrise, sunset]
+}
+
+function getTime() {
+    //gets the time selected by the user
+    const d = $('#day').val()
+    if (d === 'now') {
+        // assigns chosenTime to current time
+
+    }
+    else {
+        chosenTime = $('#time').val();
+    }
+    
+}
+
 function getDays() {
     let date = $('#day').val();
     if (date === 'now') {
         date = 0;
     }
-    console.log(date);
     return date
 }
 
@@ -272,6 +278,10 @@ function convertMinsToHrsMins(mins) {
     return `${h}\:${m}`;
   }
 
+function KelvintoCelsius(K) {
+    //Converts Kelvin to celsius
+    return K - 273.15;
+}
 
 function loadCountriesMenu(countryObject) {
     //loads dropdown menu for countries
