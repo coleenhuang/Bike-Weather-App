@@ -4,7 +4,6 @@ const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
 const sunriseurl ='https://api.met.no/weatherapi/sunrise/2.0/?';
 const locationforecasturl = 'https://api.met.no/weatherapi/locationforecast/1.9/?'
 const coordinates= {};
-let chosenTime;
 
 
 function watchLocationForm() {
@@ -162,7 +161,7 @@ function formatSunriseurl() {
     const latitude = `lat=${lat}`;
     const longitude = `lon=${lon}`;
     const date = `date=${formatDate(getDays())}`
-    const offset = `offset=+${getTimeZoneOffset()}`;
+    const offset = `offset=${getTimeZoneOffset()}`;
     const url = `${sunriseurl}${latitude}&${longitude}&${date}&${offset}`
     console.log(url)
     return url
@@ -233,9 +232,10 @@ function getSunriseTime(xml) {
 function getTime() {
     //gets the time selected by the user
     const d = $('#day').val()
+    let chosenTime;
     if (d === 'now') {
         // assigns chosenTime to current time
-
+        
     }
     else {
         chosenTime = $('#time').val();
@@ -252,28 +252,29 @@ function getDays() {
 }
 
 function formatDate(date) {
-    //Gets time and date
-    const today = new Date();
-    const year = today.getFullYear();
-    let month = today.getMonth()+1;
-    let day = today.getDate()+ parseInt(date);
-    month = month < 10 ? '0' + month : month;
-    day = day < 10 ? '0' + day : day;
-    return `${year}-${month}-${day}`
+    //formats date to format needed for query
+    return dayjs().add(date, 'day').format('YYYY-MM-DD');
 }
 
 function getTimeZoneOffset() {
     //gets time zone offset
-    const d = new Date();
-    const offsetMin = d.getTimezoneOffset();
-    return convertMinsToHrsMins(offsetMin);
+    const offsetMin = dayjs().utcOffset();
+    return convertMinsToHrsMins(offsetMin)
 }
 
 function convertMinsToHrsMins(mins) {
     //Converts mins to HH:MM format 
     let h = Math.floor(mins / 60);
     let m = mins % 60;
-    h = h < 10 ? '0' + h : h;
+    if (Math.abs(h) < 10) {
+        if (h < 0) {
+            h = h.toString().slice(0, 1) + "0" + h.toString().slice(1);
+        }
+        else {
+            h = h < 10 ? '+0' + h : '+'+h;
+        }
+    }
+    
     m = m < 10 ? '0' + m : m;
     return `${h}\:${m}`;
   }
