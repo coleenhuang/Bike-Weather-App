@@ -94,21 +94,17 @@ function watchDateForm() {
 
 function loadResults() {
     //Loads the results to the page
-    whichWeather();
+    generateWeatherResults();
     $('.results').show();
 }
 
-function whichWeather() {
-    //Decides what info to load based on time selected
-    //TODO: Implement the forecast weather
-    const day = $('#day').val();
-    console.log(day)
-    callForecast(formatForecasturl());
-    
-}
-
 function generateWeatherResults() {
-    //TODO:
+    //TODO: get min and max temperatures from forecast
+    callForecast(formatForecasturl());
+    //const day = $('#day').val();
+    //if (day === 'now') {
+        //add current temperature to string to be appended
+    //}
 }
 
 
@@ -145,8 +141,8 @@ function callForecast(url) {
         }
         throw new Error(response.statusText);
     })
-    .then(responseJson => console.log(responseJson))
-    .catch(error => alert('Data for that location is not available, please try again.'))
+    .then(responseJson => getForecastData(responseJson))
+    .catch(error => alert('Data for that time is not available, please try again.'))
 }
 
 function formatForecasturl() {
@@ -154,6 +150,7 @@ function formatForecasturl() {
     const latitude = `lat=${lat}`;
     const longitude = `lon=${lon}`;
     const url = `${forecasturl}?&key=${forecastKey}&${latitude}&${longitude}`;
+    console.log(url)
     return url
 }
 
@@ -201,6 +198,14 @@ function withinTime() {
     //Tests to see if time is within time range
 }
 
+function getSelectedDate () {
+    //Gets the date the user selected
+    const num = getDays()
+    let day = dayjs().add(num, 'day');
+    day = day.format('YYYY-MM-DD')
+    return day
+}
+
 function getDays() {
     let date = $('#day').val();
     if (date === 'now') {
@@ -209,7 +214,19 @@ function getDays() {
     return date
 }
 
+function getForecastData(responseJson) {
+    //gets the forecast data for the selected day
+    const date = getSelectedDate();
+    const dayData = responseJson.data.find(day => day.valid_date === date);
+    return dayData
+}
 
+function getHighLowtemp(data) {
+    //gets the min and max temp from the forecast api
+    const high = data.high_temp;
+    const low = data.low_temp;
+    return [high, low]   
+}
 
 function loadCountriesMenu(countryObject) {
     //loads dropdown menu for countries
