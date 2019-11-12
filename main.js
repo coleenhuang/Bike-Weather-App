@@ -1,8 +1,8 @@
+'use strict';
 const openWeatherurl = 'https://api.openweathermap.org/data/2.5/weather?';
-const futureWeatherurl = 'https://api.openweathermap.org/data/2.5/forecast?'
 const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
-const sunriseurl ='https://api.met.no/weatherapi/sunrise/2.0/?';
-const locationforecasturl = 'https://api.met.no/weatherapi/locationforecast/1.9/?'
+const forecasturl = 'https://api.weatherbit.io/v2.0/forecast/daily';
+const forecastKey = '3d56838f28a549368a4f65e675ad0be9'
 const coordinates= {};
 
 
@@ -74,7 +74,7 @@ function loadTimeOptions() {
         timeMenu.innerHTML= '';
         const today = new Date();
         const hour = today.getHours();
-        for (let j=hour; j<=24; j++){
+        for (let j=(hour+1); j<=24; j++){
             let el = document.createElement("option");
             el.textContent = `${j}:00`;
             el.value = j;
@@ -99,21 +99,18 @@ function loadResults() {
 }
 
 function whichWeather() {
-    //Decides which api to call based on date selected
-    
+    //Decides what info to load based on time selected
+    //TODO: Implement the forecast weather
     const day = $('#day').val();
-    if (day === 'now') {
-        callSunrise(formatSunriseurl());
-    }
-    else {
-        if (day === 0) {
-            //callLocationForecast()
-        }
-        else {
-            //callFutureWeather(formatfutureweatherUrl());
-        }
-    }
+    console.log(day)
+    callForecast(formatForecasturl());
+    
 }
+
+function generateWeatherResults() {
+    //TODO:
+}
+
 
 function callCurrentWeather(url) {
     //makes call to weather api
@@ -135,68 +132,28 @@ function formatweatherUrl() {
     const values = getLocationValues();
     const cityName = values[0];
     const countryCode = values[1];
-    const url = `${openWeatherurl}id=524901&APPID=${apiKey}&q=${cityName},${countryCode}&mode=json`;
+    const units = 'units=metric';
+    const url = `${openWeatherurl}id=524901&APPID=${apiKey}&q=${cityName},${countryCode}&${units}`;
     return url
 }
 
-function callSunrise(url) {
-    //Makes call to sunrise api
+function callForecast(url) {
     fetch(url)
     .then(response => {
         if (response.ok) {
-            return response.text();
+            return response.json();
         }
         throw new Error(response.statusText);
     })
-    .then(str => (new window.DOMParser())
-        .parseFromString(str, "text/xml"))
-    .then(xml => getSunriseTime(xml))
-    .catch(error => alert('Something went wrong. Please try again.'))
+    .then(responseJson => console.log(responseJson))
+    .catch(error => alert('Data for that location is not available, please try again.'))
 }
 
-
-function formatSunriseurl() {
-    //Formats url for sunrise api call
+function formatForecasturl() {
     const { lat, lon } = coordinates;
     const latitude = `lat=${lat}`;
     const longitude = `lon=${lon}`;
-    const date = `date=${formatDate(getDays())}`
-    const offset = `offset=${getTimeZoneOffset()}`;
-    const url = `${sunriseurl}${latitude}&${longitude}&${date}&${offset}`
-    console.log(url)
-    return url
-}
-
-function callLocationForecast(url) {
-    //Makes call to location forecast api
-    fetch(url)
-    .then(response => {
-        if (response.ok) {
-            return response.xml();
-        }
-        throw new Error(response.statusText);
-    })
-    .then(responseXML => console.log(responseXML))
-    .catch(error => alert('Something went wrong. Please try again.'))
-}
-
-function formatlocationforecastturl(coordinates) {
-    const { lat, lon } = coordinates;
-    const latitude = `lat=${lat}`;
-    const longitude = `lon=${lon}`;
-    const url = `${locationforecasturl}${latitude}&${longitude}`
-}
-
-function callFutureWeather(url) {
-
-}
-
-function formatfutureweatherUrl() {
-    //formats url for weather api call
-    const values = getLocationValues();
-    const cityName = values[0];
-    const countryCode = values[1];
-    const url = `${futureWeatherurl}id=524901&APPID=${apiKey}&q=${cityName},${countryCode}&mode=json`;
+    const url = `${forecasturl}?&key=${forecastKey}&${latitude}&${longitude}`;
     return url
 }
 
@@ -214,20 +171,16 @@ function getCoordinates(responseJson) {
 }
 
 function getCurrentConditions(responseJson) {
+    //FIXME: Move the weather append to a different function
+    //Set the current temperature as a global variable
    const weatherConditions = responseJson.weather[0].description;
-    const Kelvin = responseJson.main.temp;
-   const celsius = KelvintoCelsius(Kelvin);
+    const celsius = responseJson.main.temp;
     const weatherText = `
     <p>The current weather outside is ${weatherConditions}.
     And the temperature is ${parseInt(celsius)}°C</p>`;
     $('.results').append(weatherText);
 }
 
-function getSunriseTime(xml) {
-    const sunrise = xml.querySelector('sunrise').getAttribute('time');
-    const sunset = xml.querySelector('sunset').getAttribute('time');
-    return [sunrise, sunset]
-}
 
 function getTime() {
     //gets the time selected by the user
@@ -235,12 +188,17 @@ function getTime() {
     let chosenTime;
     if (d === 'now') {
         // assigns chosenTime to current time
-        
+        chosenTime = dayjs().format('HH:mm')
     }
     else {
-        chosenTime = $('#time').val();
+        chosenTime = dayjs($('#time').val());
     }
+    return chosenTime
     
+}
+
+function withinTime() {
+    //Tests to see if time is within time range
 }
 
 function getDays() {
@@ -251,38 +209,7 @@ function getDays() {
     return date
 }
 
-function formatDate(date) {
-    //formats date to format needed for query
-    return dayjs().add(date, 'day').format('YYYY-MM-DD');
-}
 
-function getTimeZoneOffset() {
-    //gets time zone offset
-    const offsetMin = dayjs().utcOffset();
-    return convertMinsToHrsMins(offsetMin)
-}
-
-function convertMinsToHrsMins(mins) {
-    //Converts mins to HH:MM format 
-    let h = Math.floor(mins / 60);
-    let m = mins % 60;
-    if (Math.abs(h) < 10) {
-        if (h < 0) {
-            h = h.toString().slice(0, 1) + "0" + h.toString().slice(1);
-        }
-        else {
-            h = h < 10 ? '+0' + h : '+'+h;
-        }
-    }
-    
-    m = m < 10 ? '0' + m : m;
-    return `${h}\:${m}`;
-  }
-
-function KelvintoCelsius(K) {
-    //Converts Kelvin to celsius
-    return K - 273.15;
-}
 
 function loadCountriesMenu(countryObject) {
     //loads dropdown menu for countries
