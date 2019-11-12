@@ -3,8 +3,17 @@ const openWeatherurl = 'https://api.openweathermap.org/data/2.5/weather?';
 const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
 const forecasturl = 'https://api.weatherbit.io/v2.0/forecast/daily';
 const forecastKey = '3d56838f28a549368a4f65e675ad0be9'
-const coordinates= {};
+let coordinates= {};
+let current = {};
 
+
+function startApp() {
+    loadCountriesMenu(COUNTRY);
+    $('.date-response').hide();
+    $('.results').hide();
+    $('.location-response').show();
+    watchLocationForm();
+}
 
 function watchLocationForm() {
     //Adds event listener to form
@@ -94,17 +103,31 @@ function watchDateForm() {
 
 function loadResults() {
     //Loads the results to the page
-    generateWeatherResults();
+    callForecast(formatForecasturl());
+    $('.results').append(`<button class='restart' type='button'>Restart</button>`)
     $('.results').show();
+    restartApp();
 }
 
-function generateWeatherResults() {
-    //TODO: get min and max temperatures from forecast
-    callForecast(formatForecasturl());
-    //const day = $('#day').val();
-    //if (day === 'now') {
+function generateWeatherResults(responseJson) {
+    //Generates weather results template
+    const day = $('#day').val();
+    const minmaxTemp = getHighLowtemp(getForecastData(responseJson));
+    let weather = `The high and low temperatures are ${minmaxTemp[0]} and ${minmaxTemp[1]}. `;
+    if (day === 'now') {
         //add current temperature to string to be appended
-    //}
+        weather += `The current temperature is ${current.temp}°C, and the weather is ${current.weather}`;
+    }
+    //const light = bikelight(getForecastData(responseJson));
+    $('.results p').append(weather)
+    //.append(light)
+}
+
+function restartApp() {
+    $('.restart').click(event => {
+        event.preventDefault();
+        startApp();
+    })
 }
 
 
@@ -141,7 +164,7 @@ function callForecast(url) {
         }
         throw new Error(response.statusText);
     })
-    .then(responseJson => getForecastData(responseJson))
+    .then(responseJson => generateWeatherResults(responseJson))
     .catch(error => alert('Data for that time is not available, please try again.'))
 }
 
@@ -168,35 +191,11 @@ function getCoordinates(responseJson) {
 }
 
 function getCurrentConditions(responseJson) {
-    //FIXME: Move the weather append to a different function
-    //Set the current temperature as a global variable
-   const weatherConditions = responseJson.weather[0].description;
-    const celsius = responseJson.main.temp;
-    const weatherText = `
-    <p>The current weather outside is ${weatherConditions}.
-    And the temperature is ${parseInt(celsius)}°C</p>`;
-    $('.results').append(weatherText);
+    //Gets the current weather and temperature
+    current.weather = responseJson.weather[0].description;
+    current.temp = responseJson.main.temp;
 }
 
-
-function getTime() {
-    //gets the time selected by the user
-    const d = $('#day').val()
-    let chosenTime;
-    if (d === 'now') {
-        // assigns chosenTime to current time
-        chosenTime = dayjs().format('HH:mm')
-    }
-    else {
-        chosenTime = dayjs($('#time').val());
-    }
-    return chosenTime
-    
-}
-
-function withinTime() {
-    //Tests to see if time is within time range
-}
 
 function getSelectedDate () {
     //Gets the date the user selected
@@ -228,6 +227,44 @@ function getHighLowtemp(data) {
     return [high, low]   
 }
 
+function bikelight(data) {
+    //tells you whether you need a bike light or not
+    //FIXME: Not working. This breaks the app.
+    const user_time = getTime();
+    const sunrise = getSunrise(data);
+    const sunset = getSunset(data);
+    if (user_time.isAfter(sunset)===true) {
+        return `It's dark outside. Remember to bring a bike light!`
+    }
+}
+
+function getSunrise(data) {
+    let sunrise = data.sunrise_ts
+    sunrise = dayjs.unix(sunrise);
+    return sunrise
+}
+
+function getSunset(data) {
+    let sunset = data.sunset.ts
+    sunset = dayjs.unix(sunset);
+    return sunset
+}
+
+function getTime() {
+    //gets the time selected by the user
+    const d = $('#day').val()
+    let chosenTime;
+    if (d === 'now') {
+        // assigns chosenTime to current time
+        chosenTime = dayjs().format('HH:mm')
+    }
+    else {
+        chosenTime = dayjs($('#time').val());
+    }
+    return chosenTime
+    
+}
+
 function loadCountriesMenu(countryObject) {
     //loads dropdown menu for countries
     const selectEl = document.querySelector('#country');
@@ -239,9 +276,6 @@ function loadCountriesMenu(countryObject) {
     });
 }
 
-function startApp() {
-    loadCountriesMenu(COUNTRY);
-    watchLocationForm()
-}
+
 
 $(startApp)
