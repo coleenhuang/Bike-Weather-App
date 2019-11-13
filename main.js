@@ -112,13 +112,16 @@ function loadResults() {
 function generateWeatherResults(responseJson) {
     //Generates weather results template
     const day = $('#day').val();
-    const minmaxTemp = getHighLowtemp(getForecastData(responseJson));
-    let weather = `The high and low temperatures are ${minmaxTemp[0]} and ${minmaxTemp[1]}. `;
+    const conditions = getForecastWeather(getForecastData(responseJson));
+    let weather = `The high and low temperatures are ${conditions[0]} and ${conditions[1]}. `;
     if (day === 'now') {
         //add current temperature to string to be appended
         weather += `The current temperature is ${current.temp}°C, and the weather is ${current.weather}`;
     }
-    //const light = bikelight(getForecastData(responseJson));
+    else {
+        weather += `The weather is ${conditions[2]}`;
+    }
+    const light = bikelight(conditions[4]);
     $('.results p').append(weather)
     //.append(light)
 }
@@ -220,38 +223,32 @@ function getForecastData(responseJson) {
     return dayData
 }
 
-function getHighLowtemp(data) {
-    //gets the min and max temp from the forecast api
+function getForecastWeather(data) {
+    //gets forecasted weather info
     const high = data.high_temp;
     const low = data.low_temp;
-    return [high, low]   
-}
-
-function bikelight(data) {
-    //tells you whether you need a bike light or not
-    //FIXME: Not working. This breaks the app.
-    const user_time = getTime();
-    const sunrise = getSunrise(data);
-    const sunset = getSunset(data);
-    if (user_time.isAfter(sunset)===true) {
-        return `It's dark outside. Remember to bring a bike light!`
-    }
-}
-
-function getSunrise(data) {
-    let sunrise = data.sunrise_ts
+    const description = data.weather.description;
+    let sunrise = data.sunrise_ts;
     sunrise = dayjs.unix(sunrise);
-    return sunrise
-}
-
-function getSunset(data) {
     let sunset = data.sunset.ts
     sunset = dayjs.unix(sunset);
-    return sunset
+    return [high, low, description, sunrise, sunset]   
 }
 
-function getTime() {
+
+function bikelight(sunset) {
+    //tells you whether you need a bike light or not
+    //FIXME:
+    //const user_time = getChosenTime();
+    //if (user_time.isAfter(sunset)===true) {
+        //return `It's dark outside. Remember to bring a bike light!`
+    //}
+}
+
+
+function getChosenTime() {
     //gets the time selected by the user
+    //FIXME: Not working. This breaks the app.
     const d = $('#day').val()
     let chosenTime;
     if (d === 'now') {
