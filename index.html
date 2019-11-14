@@ -8,20 +8,31 @@
   </head>
   <body>
     <h1>Bike Weather App</h1>
-    <section class="location-response">
-      <h2>Where are you located?</h2>
-      <form class="user-location">
-          <label for='city'>City</label>
-          <input type='text' id='city' name='city'>
-          <select id="country" name="country" class="form-control">
-          </select>
-          <button type='submit'>Submit</button>
-      </form>
-    </section>
-    <section class="date-response"></section>
-    <section class='results'>
-      <p></p>
-    </section>
+    
+      <section class="location-response">
+        <div class='flex-wrapper'>
+        <h2>Where are you located?</h2>
+        <form class="user-location">
+            <label for='city'>City</label>
+            <input type='text' id='city' name='city'>
+            <select id="country" name="country" class="form-control">
+            </select>
+            <button type='submit'>Submit</button>
+        </form>
+        </div>
+      </section>
+    
+    <div class='flex-wrapper'>
+      <section class="date-response"></section>
+    </div>
+    <div class='flex-wrapper'> 
+      <section class='results'>
+        <p></p>
+      </section>
+    </div>
+    
+    
+   
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://unpkg.com/dayjs"></script>

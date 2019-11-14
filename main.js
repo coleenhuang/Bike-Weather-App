@@ -72,7 +72,7 @@ function loadTimeOptions() {
     let timeMenu = document.querySelector('#time');
     if (value > 0) {
         timeMenu.innerHTML= '';
-        for (let i=0; i<=24; i++){
+        for (let i=0; i< 24; i++){
             let el = document.createElement("option");
             el.textContent = `${i}:00`;
             el.value = i;
@@ -83,7 +83,7 @@ function loadTimeOptions() {
         timeMenu.innerHTML= '';
         const today = new Date();
         const hour = today.getHours();
-        for (let j=(hour+1); j<=24; j++){
+        for (let j=(hour+1); j< 24; j++){
             let el = document.createElement("option");
             el.textContent = `${j}:00`;
             el.value = j;
@@ -103,9 +103,10 @@ function watchDateForm() {
 
 function loadResults() {
     //Loads the results to the page
+    const resultSection = $('.results');
+    resultSection.empty();
     callForecast(formatForecasturl());
-    $('.results').append(`<button class='restart' type='button'>Restart</button>`)
-    $('.results').show();
+    resultSection.show();
     restartApp();
 }
 
@@ -121,9 +122,10 @@ function generateWeatherResults(responseJson) {
     else {
         weather += `The weather is ${conditions[2]}`;
     }
-    const light = bikelight(conditions[4]);
-    $('.results p').append(weather)
-    //.append(light)
+    
+    $('.results').append(`<p>${weather}</p>`)
+    bikelight(conditions[3], conditions[4]);
+    $('.results').append(`<button class='restart' type='button'>Restart</button>`);
 }
 
 function restartApp() {
@@ -203,8 +205,7 @@ function getCurrentConditions(responseJson) {
 function getSelectedDate () {
     //Gets the date the user selected
     const num = getDays()
-    let day = dayjs().add(num, 'day');
-    day = day.format('YYYY-MM-DD')
+    const day = dayjs().add(num, 'day');
     return day
 }
 
@@ -219,7 +220,7 @@ function getDays() {
 function getForecastData(responseJson) {
     //gets the forecast data for the selected day
     const date = getSelectedDate();
-    const dayData = responseJson.data.find(day => day.valid_date === date);
+    const dayData = responseJson.data.find(day => day.valid_date === date.format('YYYY-MM-DD'));
     return dayData
 }
 
@@ -230,36 +231,42 @@ function getForecastWeather(data) {
     const description = data.weather.description;
     let sunrise = data.sunrise_ts;
     sunrise = dayjs.unix(sunrise);
-    let sunset = data.sunset.ts
+    let sunset = data.sunset_ts;
     sunset = dayjs.unix(sunset);
     return [high, low, description, sunrise, sunset]   
 }
 
 
-function bikelight(sunset) {
+function bikelight(sunrise, sunset) {
     //tells you whether you need a bike light or not
-    //FIXME:
-    //const user_time = getChosenTime();
-    //if (user_time.isAfter(sunset)===true) {
-        //return `It's dark outside. Remember to bring a bike light!`
-    //}
+    const user_time = getChosenTime();
+    let light;
+    if (user_time.isBefore(sunrise)===true) {
+        light = `The sun isn't up yet. Remember to bring a bike light!`;
+        $('.results p').append(light);
+    }
+    else if (user_time.isAfter(sunset)===true) {
+        light = `The sun has already set. Remember to bring a bike light!`;
+        $('.results p').append(light);
+    }
+
 }
 
 
 function getChosenTime() {
     //gets the time selected by the user
-    //FIXME: Not working. This breaks the app.
     const d = $('#day').val()
     let chosenTime;
     if (d === 'now') {
         // assigns chosenTime to current time
-        chosenTime = dayjs().format('HH:mm')
+        chosenTime = dayjs();
     }
     else {
-        chosenTime = dayjs($('#time').val());
+        let date = getSelectedDate();
+        chosenTime = dayjs(date).hour($('#time').val()).minute(0);
     }
-    return chosenTime
-    
+    console.log('Chosen time:', chosenTime)
+    return chosenTime  
 }
 
 function loadCountriesMenu(countryObject) {

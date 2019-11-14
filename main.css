@@ -2,6 +2,16 @@
     box-sizing: border-box;
 }
 
-.results {
+h1 {
+    text-align: center;
+}
+
+.results .date-response{
     display: none;
+}
+
+.flex-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
