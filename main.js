@@ -12,6 +12,7 @@ function startApp() {
     $('.date-response').hide();
     $('.results').hide();
     $('.location-response').show();
+    $('body').removeClass('night');
     watchLocationForm();
 }
 
@@ -129,7 +130,7 @@ function generateWeatherResults(responseJson) {
 }
 
 function restartApp() {
-    $('.restart').click(event => {
+    $('section').on('click','.restart', event => {
         event.preventDefault();
         startApp();
     })
@@ -244,10 +245,12 @@ function bikelight(sunrise, sunset) {
     if (user_time.isBefore(sunrise)===true) {
         light = `The sun isn't up yet. Remember to bring a bike light!`;
         $('.results p').append(light);
+        changeNight();
     }
     else if (user_time.isAfter(sunset)===true) {
         light = `The sun has already set. Remember to bring a bike light!`;
         $('.results p').append(light);
+        changeNight();
     }
 
 }
@@ -280,6 +283,9 @@ function loadCountriesMenu(countryObject) {
     });
 }
 
+function changeNight(){
+    $('body').addClass('night')
+}
 
 
 $(startApp)

@@ -2,8 +2,15 @@
     box-sizing: border-box;
 }
 
+body {
+ background: cornflowerblue;
+}
+
 h1 {
     text-align: center;
+}
+section {
+    font-size: 18px;
 }
 
 .results .date-response{
@@ -14,4 +21,14 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+
+button {
+    padding: 1rem 2rem;
+}
+
+.night {
+    background-image: url("Night.jpg");
+    color: white;
 }
