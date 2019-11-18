@@ -8,6 +8,10 @@ body {
  color: #0D0707;
 }
 
+h1 {
+    font-size: 46px;
+}
+
 h1, h2 {
     text-align: center;
     font-family: 'Proza Libre', sans-serif;
@@ -32,6 +36,14 @@ button {
     font-size: 20px;
     padding: 0.5rem 1.5rem;
 }
+
+#wheel {
+    position: absolute;
+    overflow: hidden;
+    animation:spin 4s linear;
+}
+
+@keyframes spin { 100% { transform:rotate(360deg); } }
 
 .night {
     background-image: url("Night.jpg");
