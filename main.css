@@ -3,11 +3,14 @@
 }
 
 body {
- background: cornflowerblue;
+ background: #E6EDF0;
+ font-family: 'Open Sans', sans-serif;
+ color: #0D0707;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
+    font-family: 'Proza Libre', sans-serif;
 }
 section {
     font-size: 18px;
@@ -25,7 +28,9 @@ section {
 
 
 button {
-    padding: 1rem 2rem;
+    background-color: #8B895E;
+    font-size: 20px;
+    padding: 0.5rem 1.5rem;
 }
 
 .night {

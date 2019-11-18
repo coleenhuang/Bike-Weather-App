@@ -234,8 +234,15 @@ function getForecastWeather(data) {
     sunrise = dayjs.unix(sunrise);
     let sunset = data.sunset_ts;
     sunset = dayjs.unix(sunset);
-    return [high, low, description, sunrise, sunset]   
+    let moonrise = data.moonrise_ts;
+    moonrise = dayjs.unix(moonrise);
+    let moonset = data.moonset_ts;
+    moonset = dayjs.unix(moonset);
+    const moonphase = data.moon_phase;
+    
+    return [high, low, description, sunrise, sunset, moonrise, moonset, moonphase]   
 }
+
 
 
 function bikelight(sunrise, sunset) {
@@ -271,6 +278,14 @@ function getChosenTime() {
     console.log('Chosen time:', chosenTime)
     return chosenTime  
 }
+
+/*getMoon(moonrise, moonset, moonphase) {
+    const user_time = getChosenTime();
+    if (user_time.isAfter(moonrise) && user_time.isBefore(moonset)) {
+        //moon is present
+    }
+
+}*/
 
 function loadCountriesMenu(countryObject) {
     //loads dropdown menu for countries
