@@ -45,6 +45,7 @@ function loadDateForm(){
     dateSection.empty().append(question).append(answer).show();
     $('#time').hide();
     showTimeMenu();
+    dateSection.append("<img id='clock' src='Clock.png'>")
     watchDateForm();
 }
 
@@ -125,7 +126,7 @@ function generateWeatherResults(responseJson) {
     }
     
     $('.results').append(`<p>${weather}</p>`)
-    bikelight(conditions[3], conditions[4]);
+    bikelight(conditions[3], conditions[4], conditions[5], conditions[6]);
     $('.results').append(`<button class='restart' type='button'>Restart</button>`);
 }
 
@@ -245,19 +246,21 @@ function getForecastWeather(data) {
 
 
 
-function bikelight(sunrise, sunset) {
+function bikelight(sunrise, sunset, moonrise, moonset) {
     //tells you whether you need a bike light or not
     const user_time = getChosenTime();
     let light;
     if (user_time.isBefore(sunrise)===true) {
-        light = `The sun isn't up yet. Remember to bring a bike light!`;
-        $('.results p').append(light);
+        light = `<p>The sun isn't up yet. Remember to bring a bike light!</p>`;
+        $('.results').append(light);
         changeNight();
+        getMoon(moonrise, moonset);
     }
     else if (user_time.isAfter(sunset)===true) {
-        light = `The sun has already set. Remember to bring a bike light!`;
-        $('.results p').append(light);
+        light = `<p>The sun has already set. Remember to bring a bike light!</p>`;
+        $('.results').append(light);
         changeNight();
+        getMoon(moonrise, moonset);
     }
 
 }
@@ -279,13 +282,15 @@ function getChosenTime() {
     return chosenTime  
 }
 
-/*getMoon(moonrise, moonset, moonphase) {
+
+function getMoon(moonrise, moonset) {
     const user_time = getChosenTime();
     if (user_time.isAfter(moonrise) && user_time.isBefore(moonset)) {
         //moon is present
+        alert('hi');
+        $('.results').append("<img src='Moon/fullmoon.png'>");
     }
-
-}*/
+}
 
 function loadCountriesMenu(countryObject) {
     //loads dropdown menu for countries
