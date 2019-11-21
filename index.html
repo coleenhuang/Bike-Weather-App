@@ -12,15 +12,19 @@
     <h1>Bike Weather App</h1>
     
       <section class="location-response">
-        <div class='flex-wrapper'>
+        <div class='flex-wrapper location-wrapper'>
         <h2>Where are you located?</h2>
         <form class="user-location">
-            <label for='city'>City</label>
-            <input type='text' id='city' name='city'>
-            <label for='country'>Country</label>
-            <select id="country" name="country" class="form-control">
-            </select>
-            <button type='submit'>Submit</button>
+            <label for='city'>
+              <span>City</span>
+              <input type='text' id='city' name='city'>
+            </label>
+            <label for='country'>
+              <span>Country</span>
+              <select id="country" name="country" class="form-control">
+              </select>
+            </label>
+            <button type='submit' class='location-button'>Submit</button>
         </form>
         </div>
         <img id='wheel' src='BikeWheel.png'>
@@ -35,8 +39,6 @@
       </section>
     </div>
     
-    
-   
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://unpkg.com/dayjs"></script>

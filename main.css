@@ -10,6 +10,8 @@ body {
 
 h1 {
     font-size: 46px;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
 }
 
 h1, h2 {
@@ -17,14 +19,19 @@ h1, h2 {
     font-family: 'Domine', serif;
 }
 section {
+    width: 75%;
+    margin: auto;
     font-size: 18px;
 }
+
+
 
 select {
     font-size: 16px;
     font-family: 'Roboto', sans-serif;
+    width: 150px;
     line-height: 1.3;
-    box-sizing: border-box;
+    margin: 0.5rem;
 }
 
 .results .date-response{
@@ -40,16 +47,38 @@ select {
 
 button {
     background-color: #8B895E;
-    font-size: 20px;
+    font-size: 18px;
     padding: 0.5rem 1.5rem;
     border: none;
 }
 
+.user-location label {
+    display: block;
+    padding: 1.5rem 0;
+}
+
+.user-location label span {
+    display: inline-block;
+    padding: 0 0.1rem;
+  }
+
+.user-location input[type=text] {
+    display: inline-block;
+    font-size: 18px;
+}
+
+.location-button {
+    display: block;
+    margin: auto;
+}
+
+
 #wheel {
     position: absolute;
-    left: -100px;
     width: 350px;
     overflow: hidden;
+    top: 300px;
+    left: -100px;
     animation: spin 4s linear, slide 4s forwards;
 }
 
@@ -60,6 +89,11 @@ button {
     100% { left: 800px; }
 }
 
+#clock {
+    display: block;
+    margin: auto;
+    width: 350px;
+}
 
 .restart { 
     display: block;
@@ -69,4 +103,23 @@ button {
 .night {
     background-image: url("Night.jpg");
     color: white;
+}
+
+@media(max-width: 600px) {
+    h1 {
+        font-size: 42px;
+    }
+    .user-location input[type=text], .user-location select {
+        width: 50%;
+    }
+    #wheel {
+        width: 250px;
+    }
+    @keyframes slide {
+        100% { left: 600px; }
+    }
+}
+
+@media(max-width: 900px) {
+
 }
