@@ -116,10 +116,34 @@ button {
         width: 250px;
     }
     @keyframes slide {
-        100% { left: 600px; }
+        100% { left: 625px; }
     }
 }
 
 @media(max-width: 900px) {
 
+    @keyframes slide {
+        100% { left: 800px; }
+    }
+
+    #wheel {
+        width: 250px;
+        top: 350px;
+    }
+    #clock {
+        width: 250px;
+    }
+}
+
+@media(max-width: 1200px) {
+    #wheel {
+        width: 300px;
+    }
+
+    @keyframes slide {
+        100% { left: 600px; }
+    }
+    #clock {
+        width: 250px;
+    }
 }

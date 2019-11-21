@@ -5,7 +5,8 @@ const forecasturl = 'https://api.weatherbit.io/v2.0/forecast/daily';
 const forecastKey = '3d56838f28a549368a4f65e675ad0be9'
 let coordinates= {};
 let current = {};
-
+let data = {};
+let forecastInfo = {};
 
 function startApp() {
     loadCountriesMenu(COUNTRY);
@@ -112,21 +113,21 @@ function loadResults() {
     restartApp();
 }
 
-function generateWeatherResults(responseJson) {
+function generateWeatherResults() {
     //Generates weather results template
     const day = $('#day').val();
-    const conditions = getForecastWeather(getForecastData(responseJson));
-    let weather = `The high and low temperatures are ${conditions[0]} and ${conditions[1]}. `;
+    getForecastWeather();
+    let weather = `The high and low temperatures are ${forecastInfo.high} and ${forecastInfo.low}. `;
     if (day === 'now') {
         //add current temperature to string to be appended
         weather += `The current temperature is ${current.temp}°C, and the weather is ${current.weather}`;
     }
     else {
-        weather += `The weather is ${conditions[2]}`;
+        weather += `The weather is ${forecastInfo.description}`;
     }
     
     $('.results').append(`<p>${weather}</p>`)
-    bikelight(conditions[3], conditions[4], conditions[5], conditions[6]);
+    bikelight(forecastInfo.sunrise, forecastInfo.sunset);
     $('.results').append(`<button class='restart' type='button'>Restart</button>`);
 }
 
@@ -171,7 +172,7 @@ function callForecast(url) {
         }
         throw new Error(response.statusText);
     })
-    .then(responseJson => generateWeatherResults(responseJson))
+    .then(responseJson => {getForecastData(responseJson), generateWeatherResults()})
     .catch(error => alert('Data for that time is not available, please try again.'))
 }
 
@@ -222,70 +223,68 @@ function getDays() {
 function getForecastData(responseJson) {
     //gets the forecast data for the selected day
     const date = getSelectedDate();
-    const dayData = responseJson.data.find(day => day.valid_date === date.format('YYYY-MM-DD'));
-    return dayData
+    data = responseJson.data.find(day => day.valid_date === date.format('YYYY-MM-DD'));
+    console.log(data);
 }
 
-function getForecastWeather(data) {
+function getForecastWeather() {
     //gets forecasted weather info
-    const high = data.high_temp;
-    const low = data.low_temp;
-    const description = data.weather.description;
-    let sunrise = data.sunrise_ts;
-    sunrise = dayjs.unix(sunrise);
-    let sunset = data.sunset_ts;
-    sunset = dayjs.unix(sunset);
-    let moonrise = data.moonrise_ts;
-    moonrise = dayjs.unix(moonrise);
-    let moonset = data.moonset_ts;
-    moonset = dayjs.unix(moonset);
-    const moonphase = data.moon_phase;
-    
-    return [high, low, description, sunrise, sunset, moonrise, moonset, moonphase]   
+    //FIXME: make the data into an global object
+    //FIXME: make a function for converting time from unix local
+    forecastInfo.high = data.high_temp;
+    forecastInfo.low = data.low_temp;
+    forecastInfo.description = data.weather.description;
+    forecastInfo.sunrise = dayjs.unix(data.sunrise_ts);
+    forecastInfo.sunset = dayjs.unix(data.sunset_ts);
+    forecastInfo.moonrise = data.moonrise_ts;
+    forecastInfo.moonset = data.moonset_ts;
+    forecastInfo.moonphase = data.moon_phase;
+    console.log(forecastInfo);
 }
 
 
-
-function bikelight(sunrise, sunset, moonrise, moonset) {
+function bikelight(sunrise, sunset) {
     //tells you whether you need a bike light or not
-    const user_time = getChosenTime();
     let light;
-    if (user_time.isBefore(sunrise)===true) {
+    console.log('chosenTime:', chosenTime);
+    console.log('sunrise:', sunrise, 'sunset:', sunset)
+   /* if (userTime.isBefore(sunrise)===true) {
         light = `<p>The sun isn't up yet. Remember to bring a bike light!</p>`;
         $('.results').append(light);
         changeNight();
-        getMoon(moonrise, moonset);
+        //getMoon(moonrise, moonset);
     }
-    else if (user_time.isAfter(sunset)===true) {
+    else if (userTime.isAfter(sunset)===true) {
         light = `<p>The sun has already set. Remember to bring a bike light!</p>`;
         $('.results').append(light);
         changeNight();
-        getMoon(moonrise, moonset);
-    }
+        //getMoon(moonrise, moonset);
+    }*/
 
 }
 
 
 function getChosenTime() {
     //gets the time selected by the user
-    const d = $('#day').val()
+    //FIXME: function doesn't work
+    //Returns undefined for chosenTime especially when attempting to make it global
     let chosenTime;
+    const d = $('#day').val()
     if (d === 'now') {
         // assigns chosenTime to current time
         chosenTime = dayjs();
     }
     else {
         let date = getSelectedDate();
-        chosenTime = dayjs(date).hour($('#time').val()).minute(0);
+        const t = $('#time').val()
+        chosenTime.hour(t).minute(0);
     }
-    console.log('Chosen time:', chosenTime)
-    return chosenTime  
+
 }
 
 
 function getMoon(moonrise, moonset) {
-    const user_time = getChosenTime();
-    if (user_time.isAfter(moonrise) && user_time.isBefore(moonset)) {
+    if (chosenTime.isAfter(moonrise) && chosenTime.isBefore(moonset)) {
         //moon is present
         alert('hi');
         $('.results').append("<img src='Moon/fullmoon.png'>");
