@@ -7,6 +7,7 @@ let coordinates= {};
 let current = {};
 let data = {};
 let forecastInfo = {};
+let chosenTime = dayjs();
 
 function startApp() {
     loadCountriesMenu(COUNTRY);
@@ -229,7 +230,6 @@ function getForecastData(responseJson) {
 
 function getForecastWeather() {
     //gets forecasted weather info
-    //FIXME: make the data into an global object
     //FIXME: make a function for converting time from unix local
     forecastInfo.high = data.high_temp;
     forecastInfo.low = data.low_temp;
@@ -246,6 +246,7 @@ function getForecastWeather() {
 function bikelight(sunrise, sunset) {
     //tells you whether you need a bike light or not
     let light;
+    getChosenTime();
     console.log('chosenTime:', chosenTime);
     console.log('sunrise:', sunrise, 'sunset:', sunset)
    /* if (userTime.isBefore(sunrise)===true) {
@@ -266,20 +267,13 @@ function bikelight(sunrise, sunset) {
 
 function getChosenTime() {
     //gets the time selected by the user
-    //FIXME: function doesn't work
-    //Returns undefined for chosenTime especially when attempting to make it global
-    let chosenTime;
-    const d = $('#day').val()
-    if (d === 'now') {
-        // assigns chosenTime to current time
-        chosenTime = dayjs();
-    }
-    else {
+    const d = $('#day').val();
+    if (d !== 'now') {
+        console.log('later');
         let date = getSelectedDate();
-        const t = $('#time').val()
-        chosenTime.hour(t).minute(0);
+        const t = $('#time').val();
+        chosenTime = dayjs(date).hour(t).minute(0);
     }
-
 }
 
 
