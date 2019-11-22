@@ -236,8 +236,8 @@ function getForecastWeather() {
     forecastInfo.description = data.weather.description;
     forecastInfo.sunrise = dayjs.unix(data.sunrise_ts);
     forecastInfo.sunset = dayjs.unix(data.sunset_ts);
-    forecastInfo.moonrise = data.moonrise_ts;
-    forecastInfo.moonset = data.moonset_ts;
+    forecastInfo.moonrise = dayjs.unix(data.moonrise_ts);
+    forecastInfo.moonset = dayjs.unix(data.moonset_ts);
     forecastInfo.moonphase = data.moon_phase;
     console.log(forecastInfo);
 }
@@ -249,18 +249,18 @@ function bikelight(sunrise, sunset) {
     getChosenTime();
     console.log('chosenTime:', chosenTime);
     console.log('sunrise:', sunrise, 'sunset:', sunset)
-   /* if (userTime.isBefore(sunrise)===true) {
+   if (chosenTime.isBefore(sunrise)===true) {
         light = `<p>The sun isn't up yet. Remember to bring a bike light!</p>`;
         $('.results').append(light);
         changeNight();
-        //getMoon(moonrise, moonset);
+        getMoon();
     }
-    else if (userTime.isAfter(sunset)===true) {
+    else if (chosenTime.isAfter(sunset)===true) {
         light = `<p>The sun has already set. Remember to bring a bike light!</p>`;
         $('.results').append(light);
         changeNight();
-        //getMoon(moonrise, moonset);
-    }*/
+        getMoon();
+    }
 
 }
 
@@ -277,10 +277,12 @@ function getChosenTime() {
 }
 
 
-function getMoon(moonrise, moonset) {
+function getMoon() {
+    let moonrise = forecastInfo.moonrise;
+    let moonset = forecastInfo.moonset;
     if (chosenTime.isAfter(moonrise) && chosenTime.isBefore(moonset)) {
         //moon is present
-        alert('hi');
+        console.log('moon');
         $('.results').append("<img src='Moon/fullmoon.png'>");
     }
 }
