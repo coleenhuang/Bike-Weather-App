@@ -223,6 +223,7 @@ function getDays() {
 
 function getForecastData(responseJson) {
     //gets the forecast data for the selected day
+    console.log(responseJson);
     const date = getSelectedDate();
     data = responseJson.data.find(day => day.valid_date === date.format('YYYY-MM-DD'));
     console.log(data);
@@ -283,8 +284,12 @@ function getMoon() {
     if (chosenTime.isAfter(moonrise) && chosenTime.isBefore(moonset)) {
         //moon is present
         console.log('moon');
-        $('.results').append("<img src='Moon/fullmoon.png'>");
+        $('.results').prepend("<img src='Moon/fullmoon.png'>");
     }
+}
+
+function celsiusToFahrenheit() {
+    //changes temperature from celsius to fahrenheit
 }
 
 function loadCountriesMenu(countryObject) {
