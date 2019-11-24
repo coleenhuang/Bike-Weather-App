@@ -2,7 +2,8 @@
 const openWeatherurl = 'https://api.openweathermap.org/data/2.5/weather?';
 const apiKey = '4b25e1e747da0d35147a5258c7fd6b90';
 const forecasturl = 'https://api.weatherbit.io/v2.0/forecast/daily';
-const forecastKey = '3d56838f28a549368a4f65e675ad0be9'
+const forecastKey = '3d56838f28a549368a4f65e675ad0be9';
+const moonurl='https://api.met.no/weatherapi/sunrise/2.0/?';
 let coordinates= {};
 let current = {};
 let data = {};
@@ -186,6 +187,38 @@ function formatForecasturl() {
     return url
 }
 
+function callMoon(url) {
+    //Gets the moonphase
+    fetch(url)
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        }
+        throw new Error(response.statusText);
+    })
+    .then(str => (new window.DOMParser()).parseFromString(str, 'text/xml'))
+    .then(xml => {console.log(xml)})
+    .catch(error => alert('The moon is in trouble'))
+
+}
+
+function formatMoonurl() {
+    //formats url for moon
+    const { lat, lon } = coordinates;
+    const latitude = `lat=${lat}`;
+    const longitude = `lon=${lon}`;
+    const date = formatChosenDates();
+    const offset= getTimeOffSet();
+    const url = `${moonurl}${latitude}&${longitude}&$date=${date}&offset=$+{offset}`
+}
+
+function formatChosenDates() {
+    return dayjs(chosenTime).format('YYYY-MM-DD')
+}
+
+function getTimeOffSet() {
+    return dayjs().utcOffset().format('HH:mm');
+}
 function getLocationValues() {
     //Gets values from location form
     const city = $('#city').val();
@@ -231,7 +264,6 @@ function getForecastData(responseJson) {
 
 function getForecastWeather() {
     //gets forecasted weather info
-    //FIXME: make a function for converting time from unix local
     forecastInfo.high = data.high_temp;
     forecastInfo.low = data.low_temp;
     forecastInfo.description = data.weather.description;
@@ -281,11 +313,28 @@ function getChosenTime() {
 function getMoon() {
     let moonrise = forecastInfo.moonrise;
     let moonset = forecastInfo.moonset;
+    //callMoon(formatMoonurl());
     if (chosenTime.isAfter(moonrise) && chosenTime.isBefore(moonset)) {
         //moon is present
         console.log('moon');
         $('.results').prepend("<img src='Moon/fullmoon.png'>");
     }
+}
+
+function getMoonPhaseImage(phase = 0) {
+    //Gets the right image depending on the phase of the moon
+    const MOON = {
+        0: '🌑',
+        12.5: 'Moon/waxingcrescent.png',
+        25: 'Moon/firstquarter.png',
+        37.5: 'Moon/waxinggibbous.png',
+        50: 'Moon/fullmoon.png',
+        62.5: 'Moon/waninggibbous.png',
+        75: 'Moon/thirdquarter.png',
+        87.5: 'Moon/waningcrescent.png'
+    }
+    const key = Number.parseInt(phase / 12.5, 10) * 12.5
+    return MOON[key] || MOON[0]
 }
 
 function celsiusToFahrenheit() {
