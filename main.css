@@ -24,8 +24,6 @@ section {
     font-size: 18px;
 }
 
-
-
 select {
     font-size: 16px;
     font-family: 'Roboto', sans-serif;
@@ -44,17 +42,28 @@ select {
     align-items: center;
 }
 
+.error {
+    position: relative;
+    color: #D32C41;
+    z-index: 1000;
+}
+
+section p {
+    text-align: center;
+}
 
 button {
     background-color: #8B895E;
     font-size: 18px;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
     padding: 0.5rem 1.5rem;
     border: none;
 }
 
 .user-location label {
     display: block;
-    padding: 1.5rem 0;
+    padding: 1rem 0;
 }
 
 .user-location label span {
@@ -79,6 +88,7 @@ button {
     overflow: hidden;
     top: 300px;
     left: -100px;
+    z-index: 200;
     animation: spin 3s linear, slide 3s forwards;
 }
 
@@ -112,12 +122,24 @@ button {
     .user-location input[type=text], .user-location select {
         width: 50%;
     }
+
     #wheel {
         width: 250px;
     }
     @keyframes slide {
         100% { left: 625px; }
     }
+
+    button {
+        display: block;
+        margin: auto;
+    }
+
+   #datetime select {
+       display: block;
+       margin: 1rem auto;
+   }
+
 }
 
 @media(max-width: 900px) {
@@ -135,6 +157,16 @@ button {
     }
 }
 
+@media(min-width: 900px) {
+    section {
+        padding: 0 10%;
+    }
+
+    #datetime {
+        margin: auto;
+    }
+}
+
 @media(max-width: 1200px) {
     #wheel {
         width: 300px;
@@ -147,3 +179,4 @@ button {
         width: 250px;
     }
 }
+

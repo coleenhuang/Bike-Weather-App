@@ -102,15 +102,15 @@ function watchDateForm() {
     $('#datetime').on('submit', event => {
         event.preventDefault();
         $('.date-response').hide();
-        loadResults();
+        $('.results').empty();
+        callForecast(formatForecasturl());
     })
 }
 
 function loadResults() {
     //Loads the results to the page
     const resultSection = $('.results');
-    resultSection.empty();
-    callForecast(formatForecasturl());
+    generateWeatherResults();
     resultSection.show();
     restartApp();
 }
@@ -119,16 +119,16 @@ function generateWeatherResults() {
     //Generates weather results template
     const day = $('#day').val();
     getForecastWeather();
-    let weather = `The high and low temperatures are ${forecastInfo.high} and ${forecastInfo.low}. `;
+    let weather = `<p>The high and low temperatures are ${forecastInfo.high}°C and ${forecastInfo.low}°C.</p>`;
     if (day === 'now') {
         //add current temperature to string to be appended
-        weather += `The current temperature is ${current.temp}°C, and the weather is ${current.weather}`;
+        weather += `<p>The current temperature is ${current.temp}°C, and the weather is ${current.weather}.</p>`;
     }
     else {
-        weather += `The weather is ${forecastInfo.description}`;
+        weather += `<p>The weather is ${forecastInfo.description.toLowerCase()}.</p>`;
     }
     
-    $('.results').append(`<p>${weather}</p>`)
+    $('.results').append(`${weather}`)
     bikelight(forecastInfo.sunrise, forecastInfo.sunset);
     $('.results').append(`<button class='restart' type='button'>Restart</button>`);
 }
@@ -153,7 +153,7 @@ function callCurrentWeather(url) {
     .then(responseJson => {getCurrentConditions(responseJson)
     getCoordinates(responseJson)
     loadDateForm()})
-    .catch(error => alert('Data for that location is not available, please try again.'))
+    .catch(error => $('.location-response').append('<p class="error">Sorry, data for that location is not available.</p>'))
 }
 
 function formatweatherUrl() {
@@ -174,8 +174,8 @@ function callForecast(url) {
         }
         throw new Error(response.statusText);
     })
-    .then(responseJson => {getForecastData(responseJson), generateWeatherResults()})
-    .catch(error => alert('Data for that time is not available, please try again.'))
+    .then(responseJson => {getForecastData(responseJson), loadResults()})
+    .catch(error => $('.date-response').append('<p class="error">Data for that time is not available, please try again.</p>'))
 }
 
 function formatForecasturl() {
@@ -279,14 +279,16 @@ function getChosenTime() {
 
 
 function getMoon() {
+    console.log('moon');
     let moonrise = forecastInfo.moonrise;
     let moonset = forecastInfo.moonset;
     let phase = forecastInfo.moonphase*100;
+    $('.results').prepend(`<img src='Moon/fullmoon.png'>`);
     if (chosenTime.isAfter(moonrise) && chosenTime.isBefore(moonset)) {
         //moon is present
-        console.log('moon');
-        let moonImage = getMoonPhaseImage(phase);
-        $('.results').prepend(`<img src='${moonImage}'>`);
+        
+        //let moonImage = getMoonPhaseImage(phase);
+        //$('.results').prepend(`<img src='${moonImage}'>`);
     }
 }
 
@@ -301,10 +303,6 @@ function getMoonPhaseImage(phase = 0) {
     }
     const key = Number.parseInt(phase/25, 10) * 25
     return MOON[key] || MOON[0]
-}
-
-function celsiusToFahrenheit() {
-    //changes temperature from celsius to fahrenheit
 }
 
 function loadCountriesMenu(countryObject) {
