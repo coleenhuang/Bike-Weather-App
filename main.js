@@ -283,12 +283,10 @@ function getMoon() {
     let moonrise = forecastInfo.moonrise;
     let moonset = forecastInfo.moonset;
     let phase = forecastInfo.moonphase*100;
-    $('.results').prepend(`<img src='Moon/fullmoon.png'>`);
     if (chosenTime.isAfter(moonrise) && chosenTime.isBefore(moonset)) {
         //moon is present
-        
-        //let moonImage = getMoonPhaseImage(phase);
-        //$('.results').prepend(`<img src='${moonImage}'>`);
+        let moonImage = getMoonPhaseImage(phase);
+        $('.results').prepend(`<img src='${moonImage}'>`);
     }
 }
 

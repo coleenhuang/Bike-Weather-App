@@ -127,7 +127,7 @@ button {
         width: 250px;
     }
     @keyframes slide {
-        100% { left: 625px; }
+        100% { left: 700px; }
     }
 
     button {
@@ -145,7 +145,7 @@ button {
 @media(max-width: 900px) {
 
     @keyframes slide {
-        100% { left: 800px; }
+        100% { left: 700px; }
     }
 
     #wheel {
