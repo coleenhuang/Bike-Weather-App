@@ -163,6 +163,8 @@ button {
     }
 
     #datetime {
+        display: block;
+        padding: 0 15%;
         margin: auto;
     }
 }
