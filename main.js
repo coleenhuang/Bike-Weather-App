@@ -48,7 +48,7 @@ function loadDateForm(){
     dateSection.empty().append(question).append(answer).show();
     $('#time').hide();
     showTimeMenu();
-    dateSection.append("<img id='clock' src='Clock.png'>")
+    dateSection.append("<img id='clock' src='Clock.png' alt='clock'>")
     watchDateForm();
 }
 
@@ -183,7 +183,6 @@ function formatForecasturl() {
     const latitude = `lat=${lat}`;
     const longitude = `lon=${lon}`;
     const url = `${forecasturl}?&key=${forecastKey}&${latitude}&${longitude}`;
-    console.log(url)
     return url
 }
 
@@ -224,10 +223,8 @@ function getDays() {
 
 function getForecastData(responseJson) {
     //gets the forecast data for the selected day
-    console.log(responseJson);
     const date = getSelectedDate();
     data = responseJson.data.find(day => day.valid_date === date.format('YYYY-MM-DD'));
-    console.log(data);
 }
 
 function getForecastWeather() {
@@ -240,7 +237,6 @@ function getForecastWeather() {
     forecastInfo.moonrise = dayjs.unix(data.moonrise_ts);
     forecastInfo.moonset = dayjs.unix(data.moonset_ts);
     forecastInfo.moonphase = data.moon_phase;
-    console.log(forecastInfo);
 }
 
 
@@ -270,7 +266,6 @@ function getChosenTime() {
     //gets the time selected by the user
     const d = $('#day').val();
     if (d !== 'now') {
-        console.log('later');
         let date = getSelectedDate();
         const t = $('#time').val();
         chosenTime = dayjs(date).hour(t).minute(0);
@@ -279,7 +274,7 @@ function getChosenTime() {
 
 
 function getMoon() {
-    console.log('moon');
+    //sees if moon is in the sky or not
     let moonrise = forecastInfo.moonrise;
     let moonset = forecastInfo.moonset;
     let phase = forecastInfo.moonphase*100;
@@ -293,11 +288,11 @@ function getMoon() {
 function getMoonPhaseImage(phase = 0) {
     //Gets the right image depending on the phase of the moon
     const MOON = {
-        0: 'Moon/newmoon.png',
-        25: 'Moon/crescent.png',
-        5: 'Moon/quarter.png',
-        75: 'Moon/gibbous.png',
-        100: 'Moon/fullmoon.png',
+        0: `<img src='Moon/newmoon.png' alt='new moon'>`,
+        25: `<img src='Moon/crescent.png' alt='crescent moon'>`,
+        5: `<img src='Moon/quarter.png' alt='quarter moon'>`,
+        75: `<img src='Moon/gibbous.png' alt='gibbous moon'>`,
+        100: `<img src='Moon/fullmoon.png' alt='full moon'>`,
     }
     const key = Number.parseInt(phase/25, 10) * 25
     return MOON[key] || MOON[0]
