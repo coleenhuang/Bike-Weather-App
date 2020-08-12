@@ -10,6 +10,7 @@ let data = {};
 let forecastInfo = {};
 let chosenTime = dayjs();
 
+
 function startApp() {
     loadCountriesMenu(COUNTRY);
     $('.date-response').hide();
@@ -62,7 +63,7 @@ function showTimeMenu(){
         let val = dayMenu.options[index].value;
         if (val !== 'now') {
             loadTimeOptions();
-            timeMenu.show();    
+            timeMenu.show();
         }
         else {
             timeMenu.hide();
@@ -127,7 +128,7 @@ function generateWeatherResults() {
     else {
         weather += `<p>The weather is ${forecastInfo.description.toLowerCase()}.</p>`;
     }
-    
+
     $('.results').append(`${weather}`)
     bikelight(forecastInfo.sunrise, forecastInfo.sunset);
     $('.results').append(`<button class='restart' type='button'>Restart</button>`);
@@ -206,21 +207,6 @@ function getCurrentConditions(responseJson) {
 }
 
 
-function getSelectedDate () {
-    //Gets the date the user selected
-    const num = getDays()
-    const day = dayjs().add(num, 'day');
-    return day
-}
-
-function getDays() {
-    let date = $('#day').val();
-    if (date === 'now') {
-        date = 0;
-    }
-    return date
-}
-
 function getForecastData(responseJson) {
     //gets the forecast data for the selected day
     const date = getSelectedDate();
@@ -261,6 +247,20 @@ function bikelight(sunrise, sunset) {
 
 }
 
+function getSelectedDate () {
+    //Gets the date the user selected
+    const num = getDays()
+    const day = dayjs().add(num, 'day');
+    return day
+}
+
+function getDays() {
+    let date = $('#day').val();
+    if (date === 'now') {
+        date = 0;
+    }
+    return date
+}
 
 function getChosenTime() {
     //gets the time selected by the user
@@ -271,7 +271,6 @@ function getChosenTime() {
         chosenTime = dayjs(date).hour(t).minute(0);
     }
 }
-
 
 function getMoon() {
     //sees if moon is in the sky or not
